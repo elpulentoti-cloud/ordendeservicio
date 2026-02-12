@@ -1,0 +1,16 @@
+
+{
+  "short_name": "Delta33",
+  "name": "Delta33 CRM & Wisdom",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3233/3233497.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#00205B",
+  "background_color": "#ffffff"
+}

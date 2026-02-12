@@ -41,7 +41,7 @@ const HistoryLog: React.FC<HistoryLogProps> = ({ traces, appointments, onAddTrac
         <h3 className="text-xl font-bold text-fen-navy mb-4 flex items-center gap-2">
           <MessageSquare className="text-fen-blue" /> Registrar Nuevo Acuerdo
         </h3>
-        <p className="text-sm text-gray-500 mb-6 italic">Ingresa lo que el cliente te dijo. Mason usará IA para resumir el acuerdo y asegurar trazabilidad.</p>
+        <p className="text-sm text-gray-500 mb-6 italic">Ingresa lo que el cliente te dijo. Delta33 usará IA para resumir el acuerdo y asegurar trazabilidad absoluta.</p>
         
         <div className="space-y-4">
           <select 
@@ -86,7 +86,7 @@ const HistoryLog: React.FC<HistoryLogProps> = ({ traces, appointments, onAddTrac
                   <span className="text-xs text-gray-400">{trace.date}</span>
                 </div>
                 <div className="bg-blue-50 p-3 rounded-lg mb-3">
-                  <p className="text-sm font-semibold text-fen-navy italic">"Resumen Mason: {trace.summary}"</p>
+                  <p className="text-sm font-semibold text-fen-navy italic">"Resumen Delta33: {trace.summary}"</p>
                 </div>
                 <p className="text-sm text-gray-600 line-clamp-2">{trace.content}</p>
               </div>

@@ -1,16 +1,18 @@
 
 import React, { useState } from 'react';
 import { MasonicIcons, COLORS } from '../constants';
-import { LogIn, UserPlus, Calendar, TrendingUp, Info, ChevronRight, Mail, X } from 'lucide-react';
+import { LogIn, UserPlus, Calendar, TrendingUp, Info, ChevronRight, Mail, X, Clock } from 'lucide-react';
 import DailyWisdom from './DailyWisdom';
 import { Appointment } from '../types';
 
 interface LandingPageProps {
   onLogin: (u: string, p: string) => void;
   onGuestAppointment: (app: Appointment) => void;
+  currentTime: Date;
+  doomsday: { hours: number; mins: number; secs: number };
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment, currentTime, doomsday }) => {
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
   const [showBooking, setShowBooking] = useState(false);
@@ -47,11 +49,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }
         <div className="flex items-center gap-3">
           <MasonicIcons.Owl className="text-fen-navy" size={32} />
           <div className="flex flex-col">
-            <span className="masonic-font text-2xl font-bold tracking-widest text-fen-navy">MASON</span>
+            <span className="masonic-font text-2xl font-bold tracking-widest text-fen-navy">DELTA33</span>
             <span className="text-[9px] uppercase font-bold text-fen-blue tracking-[0.3em]">Servicio & Discreción</span>
           </div>
         </div>
-        <div className="flex items-center gap-6">
+        
+        <div className="flex items-center gap-10">
+           {/* Real-time Clock in Nav */}
+           <div className="hidden lg:flex flex-col items-center">
+              <span className="text-[9px] uppercase font-bold text-gray-400 tracking-widest">Cronos del Taller</span>
+              <span className="text-sm font-mono text-fen-navy font-bold">{currentTime.toLocaleTimeString()}</span>
+           </div>
+
           <button onClick={() => setShowBooking(true)} className="hidden md:flex items-center gap-2 text-fen-navy font-bold hover:text-fen-blue transition-colors text-sm uppercase tracking-wider">
             <Calendar size={18} /> Agendar Cita
           </button>
@@ -65,8 +74,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex flex-col items-center">
         
+        {/* Doomsday Banner */}
+        <div className="w-full bg-red-600 text-white py-2 text-center text-xs font-bold uppercase tracking-[0.3em] overflow-hidden whitespace-nowrap shadow-md">
+          <div className="animate-pulse">
+            Reloj del Juicio Final: {String(doomsday.hours).padStart(2, '0')}:{String(doomsday.mins).padStart(2, '0')}:{String(doomsday.secs).padStart(2, '0')} para el Gran Cambio • Ordo Ab Chao •
+          </div>
+        </div>
+
         {/* Hero Section */}
-        <section className="w-full max-w-7xl px-8 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <section className="w-full max-w-7xl px-8 py-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-fen-blue/10 text-fen-blue rounded-full text-[10px] font-bold uppercase tracking-widest">
               <MasonicIcons.ThreeDots /> Al Servicio de la Verdad
@@ -76,7 +92,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }
               <span className="text-fen-blue">Hacia la Excelencia</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-lg leading-relaxed">
-              Gestión profesional con la discreción y el rigor de una tradición milenaria. Seguimiento absoluto de cada acuerdo para su tranquilidad.
+              Gestión profesional con la discreción y el rigor de una tradición milenaria. Seguimiento absoluto de cada acuerdo para su tranquilidad con Delta33.
             </p>
             <div className="flex gap-4">
               <button onClick={() => setShowBooking(true)} className="bg-fen-navy text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:bg-fen-navy/90 transition-all shadow-xl">
@@ -85,6 +101,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }
               <button className="bg-white border-2 border-fen-navy text-fen-navy px-8 py-4 rounded-xl font-bold hover:bg-gray-50 transition-all">
                 Saber Más
               </button>
+            </div>
+            
+            {/* Countdown Widget in Hero */}
+            <div className="pt-8 border-t border-gray-100">
+               <div className="flex items-center gap-4 text-fen-navy">
+                  <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100">
+                    <Clock size={24} className="text-fen-blue" />
+                  </div>
+                  <div>
+                    <h5 className="text-xs font-bold uppercase tracking-widest text-gray-400">Hoy es {currentTime.toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h5>
+                    <p className="text-lg font-mono font-bold">{currentTime.toLocaleTimeString()}</p>
+                  </div>
+               </div>
             </div>
           </div>
 
@@ -123,7 +152,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }
               >
                 Iniciarse <MasonicIcons.ThreeDots />
               </button>
-              <p className="text-center text-xs text-gray-400">¿Olvidó su contraseña? Contacte al Gran Secretario.</p>
+              <p className="text-center text-xs text-gray-400">¿Olvidó su contraseña? Contacte al Gran Secretario de Delta33.</p>
             </div>
           </div>
         </section>
@@ -154,9 +183,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }
             <div className="flex justify-between items-start mb-8">
               <div>
                 <h4 className="text-3xl font-bold text-fen-navy masonic-font">Solicitar Servicio</h4>
-                <p className="text-gray-500 text-sm">Pruebe nuestra trazabilidad absoluta.</p>
+                <p className="text-gray-500 text-sm">Pruebe nuestra trazabilidad absoluta con Delta33.</p>
               </div>
-              {/* Fixed: X is now imported from lucide-react */}
               <button onClick={() => setShowBooking(false)} className="p-2 hover:bg-gray-100 rounded-full"><X /></button>
             </div>
             <form onSubmit={handleBooking} className="space-y-4">
@@ -182,7 +210,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }
           <div className="flex items-center gap-4">
             <MasonicIcons.Eye size={40} className="text-fen-blue" />
             <div className="text-sm">
-              <p className="font-bold text-white uppercase tracking-widest">Mason Dashboard 2025</p>
+              <p className="font-bold text-white uppercase tracking-widest">Delta33 Dashboard 2025</p>
               <p>Inspirado en los valores de la FEN, U. de Chile.</p>
             </div>
           </div>
@@ -193,7 +221,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onGuestAppointment }
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span className="text-[10px] uppercase font-bold tracking-widest">Taller Operativo</span>
+            <span className="text-[10px] uppercase font-bold tracking-widest">Taller Operativo Delta33</span>
           </div>
         </div>
       </footer>

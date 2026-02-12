@@ -14,14 +14,16 @@ import {
 } from 'recharts';
 import { Appointment, Budget, SurveyResponse } from '../types';
 import { COLORS } from '../constants';
+import { Clock } from 'lucide-react';
 
 interface DashboardProps {
   appointments: Appointment[];
   budgets: Budget[];
   surveys: SurveyResponse[];
+  doomsday: { hours: number; mins: number; secs: number };
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ appointments, budgets, surveys }) => {
+const Dashboard: React.FC<DashboardProps> = ({ appointments, budgets, surveys, doomsday }) => {
   const stats = useMemo(() => {
     const totalRevenue = budgets.reduce((sum, b) => sum + b.total, 0);
     const avgRating = surveys.length > 0 ? (surveys.reduce((sum, s) => sum + s.rating, 0) / surveys.length).toFixed(1) : 'N/A';
@@ -40,21 +42,30 @@ const Dashboard: React.FC<DashboardProps> = ({ appointments, budgets, surveys })
   return (
     <div className="space-y-8">
       {/* Top Indicators */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <p className="text-gray-500 text-sm mb-1 uppercase tracking-wider font-semibold">Ingresos Totales</p>
-          <h3 className="text-3xl font-bold text-fen-navy">${stats.totalRevenue.toLocaleString('es-CL')}</h3>
-          <div className="mt-2 text-green-500 text-xs font-medium">+12.5% vs mes anterior</div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center">
+          <p className="text-gray-500 text-[10px] mb-1 uppercase tracking-wider font-bold">Ingresos Totales</p>
+          <h3 className="text-2xl font-bold text-fen-navy">${stats.totalRevenue.toLocaleString('es-CL')}</h3>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <p className="text-gray-500 text-sm mb-1 uppercase tracking-wider font-semibold">Citas este Mes</p>
-          <h3 className="text-3xl font-bold text-fen-navy">{appointments.length}</h3>
-          <div className="mt-2 text-blue-500 text-xs font-medium">8 pendientes de confirmación</div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center">
+          <p className="text-gray-500 text-[10px] mb-1 uppercase tracking-wider font-bold">Citas Activas</p>
+          <h3 className="text-2xl font-bold text-fen-navy">{appointments.length}</h3>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <p className="text-gray-500 text-sm mb-1 uppercase tracking-wider font-semibold">Calidad del Servicio</p>
-          <h3 className="text-3xl font-bold text-fen-navy">{stats.avgRating} / 5.0</h3>
-          <div className="mt-2 text-yellow-500 text-xs font-medium">Basado en {surveys.length} encuestas</div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center">
+          <p className="text-gray-500 text-[10px] mb-1 uppercase tracking-wider font-bold">Calidad Servicio</p>
+          <h3 className="text-2xl font-bold text-fen-navy">{stats.avgRating} / 5.0</h3>
+        </div>
+        <div className="bg-fen-navy p-6 rounded-xl shadow-lg border border-red-900/30 flex flex-col justify-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-2 opacity-10">
+             <Clock size={40} className="text-red-500" />
+          </div>
+          <p className="text-red-400 text-[10px] mb-1 uppercase tracking-wider font-bold">Reloj del Juicio Final</p>
+          <h3 className="text-2xl font-mono text-red-500 font-bold doomsday-text">
+            {String(doomsday.hours).padStart(2, '0')}:
+            {String(doomsday.mins).padStart(2, '0')}:
+            {String(doomsday.secs).padStart(2, '0')}
+          </h3>
+          <p className="text-[8px] text-red-400/60 uppercase tracking-[0.2em] mt-1">Para el fin del ciclo</p>
         </div>
       </div>
 

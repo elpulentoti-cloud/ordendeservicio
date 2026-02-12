@@ -12,7 +12,8 @@ import {
   Star, 
   BookOpen,
   LogIn,
-  UserPlus
+  UserPlus,
+  Clock
 } from 'lucide-react';
 import { 
   Appointment, 
@@ -40,30 +41,49 @@ const App: React.FC = () => {
   const [traces, setTraces] = useState<AgreementTrace[]>([]);
   const [surveys, setSurveys] = useState<SurveyResponse[]>([]);
   
+  // Real-time Clock and Doomsday state
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Calculate doomsday (using 90 seconds to midnight as current Doomsday Clock metaphor)
+  const getDoomsdayTime = () => {
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+    // In our esoteric version, "Midnight" is the end of the current Aeon
+    const diff = midnight.getTime() - currentTime.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    return { hours, mins, secs };
+  };
+
   // Load initial data
   useEffect(() => {
-    setAppointments(JSON.parse(localStorage.getItem('mason_appointments') || '[]'));
-    setBudgets(JSON.parse(localStorage.getItem('mason_budgets') || '[]'));
-    setTraces(JSON.parse(localStorage.getItem('mason_traces') || '[]'));
-    setSurveys(JSON.parse(localStorage.getItem('mason_surveys') || '[]'));
+    setAppointments(JSON.parse(localStorage.getItem('delta33_appointments') || '[]'));
+    setBudgets(JSON.parse(localStorage.getItem('delta33_budgets') || '[]'));
+    setTraces(JSON.parse(localStorage.getItem('delta33_traces') || '[]'));
+    setSurveys(JSON.parse(localStorage.getItem('delta33_surveys') || '[]'));
     
-    const session = sessionStorage.getItem('mason_session');
+    const session = sessionStorage.getItem('delta33_session');
     if (session) setIsAuthenticated(true);
   }, []);
 
   // Sync with LocalStorage
   useEffect(() => {
-    localStorage.setItem('mason_appointments', JSON.stringify(appointments));
-    localStorage.setItem('mason_budgets', JSON.stringify(budgets));
-    localStorage.setItem('mason_traces', JSON.stringify(traces));
-    localStorage.setItem('mason_surveys', JSON.stringify(surveys));
+    localStorage.setItem('delta33_appointments', JSON.stringify(appointments));
+    localStorage.setItem('delta33_budgets', JSON.stringify(budgets));
+    localStorage.setItem('delta33_traces', JSON.stringify(traces));
+    localStorage.setItem('delta33_surveys', JSON.stringify(surveys));
   }, [appointments, budgets, traces, surveys]);
 
   const handleLogin = (user: string, pass: string) => {
-    // Basic auth simulation
     if (user === 'admin' && pass === '1234') {
       setIsAuthenticated(true);
-      sessionStorage.setItem('mason_session', 'true');
+      sessionStorage.setItem('delta33_session', 'true');
     } else {
       alert("Credenciales incorrectas. Toque la puerta de nuevo.");
     }
@@ -71,7 +91,7 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    sessionStorage.removeItem('mason_session');
+    sessionStorage.removeItem('delta33_session');
   };
 
   const exportData = () => {
@@ -80,7 +100,7 @@ const App: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `mason_secret_archive_${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `delta33_secret_archive_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
   };
 
@@ -90,19 +110,19 @@ const App: React.FC = () => {
   const addSurvey = (survey: SurveyResponse) => setSurveys(prev => [...prev, survey]);
 
   if (!isAuthenticated) {
-    return <LandingPage onLogin={handleLogin} onGuestAppointment={addAppointment} />;
+    return <LandingPage onLogin={handleLogin} onGuestAppointment={addAppointment} currentTime={currentTime} doomsday={getDoomsdayTime()} />;
   }
 
   const renderView = () => {
     switch(currentView) {
-      case 'dashboard': return <Dashboard appointments={appointments} budgets={budgets} surveys={surveys} />;
+      case 'dashboard': return <Dashboard appointments={appointments} budgets={budgets} surveys={surveys} doomsday={getDoomsdayTime()} />;
       case 'scheduler': return <Scheduler appointments={appointments} onAdd={addAppointment} onSendEmail={(email) => console.log(`Email trace to ${email}`)} />;
       case 'budget': return <BudgetManager budgets={budgets} appointments={appointments} onAdd={addBudget} />;
       case 'history': return <HistoryLog traces={traces} appointments={appointments} onAddTrace={addTrace} />;
       case 'daily': return <DailyWisdom />;
       case 'survey': return <SurveyManager surveys={surveys} appointments={appointments} onAdd={addSurvey} />;
       case 'settings': return <SettingsPanel onExport={exportData} onLogout={handleLogout} />;
-      default: return <Dashboard appointments={appointments} budgets={budgets} surveys={surveys} />;
+      default: return <Dashboard appointments={appointments} budgets={budgets} surveys={surveys} doomsday={getDoomsdayTime()} />;
     }
   };
 
@@ -112,7 +132,7 @@ const App: React.FC = () => {
     { id: 'budget', label: 'Tesorería', icon: FileText },
     { id: 'history', label: 'Trazabilidad', icon: History },
     { id: 'survey', label: 'Perfeccionamiento', icon: Star },
-    { id: 'daily', label: 'Luz Masónica', icon: BookOpen },
+    { id: 'daily', label: 'Luz Iniciática', icon: BookOpen },
     { id: 'settings', label: 'Taller', icon: Settings },
   ];
 
@@ -125,7 +145,7 @@ const App: React.FC = () => {
           <MasonicIcons.Owl className="text-fen-blue" />
           {isSidebarOpen && (
             <div className="flex flex-col">
-              <span className="masonic-font text-xl font-bold tracking-[0.2em]">MASON</span>
+              <span className="masonic-font text-xl font-bold tracking-[0.2em]">DELTA33</span>
               <span className="text-[10px] uppercase text-fen-blue font-bold tracking-widest">Ordo Ab Chao</span>
             </div>
           )}
@@ -160,8 +180,12 @@ const App: React.FC = () => {
             </h2>
           </div>
           <div className="flex items-center gap-6">
+            <div className="flex flex-col items-end mr-4">
+              <span className="text-[10px] uppercase font-bold text-gray-400">Hora del Taller</span>
+              <span className="text-sm font-mono text-fen-navy font-bold">{currentTime.toLocaleTimeString()}</span>
+            </div>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-fen-navy flex items-center justify-center text-white text-xs border border-fen-blue">M∴</div>
+              <div className="w-8 h-8 rounded-full bg-fen-navy flex items-center justify-center text-white text-xs border border-fen-blue">Δ33</div>
               <span className="text-xs font-bold text-fen-navy hidden md:block">Venerable Maestro</span>
             </div>
           </div>

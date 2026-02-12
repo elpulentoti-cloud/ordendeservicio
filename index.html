@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mason - CRM & Wisdom</title>
+    <title>Delta33 - CRM & Wisdom</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -14,6 +14,15 @@
         .text-fen-navy { color: #00205B; }
         .bg-fen-blue { background-color: #00A3E0; }
         .border-fen-navy { border-color: #00205B; }
+        
+        /* Animation for the Doomsday Glow */
+        @keyframes pulse-red {
+          0%, 100% { text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
+          50% { text-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
+        }
+        .doomsday-text {
+          animation: pulse-red 2s infinite;
+        }
     </style>
 <script type="importmap">
 {
@@ -30,5 +39,7 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
     <div id="root"></div>
+    <!-- Script tag added to load the entry point -->
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>

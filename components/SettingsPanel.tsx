@@ -23,11 +23,11 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onExport, onLogout }) => 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Usuario</label>
-              <input readOnly value="admin_mason" className="w-full bg-gray-50 border rounded-lg p-2 outline-none" />
+              <input readOnly value="admin_delta33" className="w-full bg-gray-50 border rounded-lg p-2 outline-none" />
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Email de Notificaciones</label>
-              <input readOnly value="contacto@mason.cl" className="w-full bg-gray-50 border rounded-lg p-2 outline-none" />
+              <input readOnly value="contacto@delta33.cl" className="w-full bg-gray-50 border rounded-lg p-2 outline-none" />
             </div>
           </div>
           <button className="text-fen-blue text-sm font-bold flex items-center gap-1 hover:underline">
@@ -39,14 +39,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onExport, onLogout }) => 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6 border-b bg-gray-50">
           <h3 className="font-bold text-fen-navy flex items-center gap-2">
-            <Database size={20} /> Gestión de Archivos Secretos
+            <Database size={20} /> Gestión de Archivos Delta33
           </h3>
         </div>
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h4 className="font-bold text-gray-900">Exportar Antecedentes Locales</h4>
-              <p className="text-sm text-gray-500">Descarga un archivo JSON con toda la trazabilidad y presupuestos.</p>
+              <p className="text-sm text-gray-500">Descarga un archivo JSON con toda la trazabilidad y presupuestos de Delta33.</p>
             </div>
             <button 
               onClick={onExport}
@@ -61,7 +61,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onExport, onLogout }) => 
               <Shield size={20} />
               <span className="font-bold uppercase tracking-widest text-xs">Vigilancia del Taller: Activa</span>
             </div>
-            <p className="text-xs text-gray-400 italic">Mason Dashboard utiliza protocolos de encriptación y trazabilidad asistida por IA para asegurar que ningún acuerdo sea olvidado. Ordo Ab Chao.</p>
+            <p className="text-xs text-gray-400 italic">Delta33 Dashboard utiliza protocolos de encriptación y trazabilidad asistida por IA para asegurar que ningún acuerdo sea olvidado. Ordo Ab Chao.</p>
           </div>
         </div>
       </div>

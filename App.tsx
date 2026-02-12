@@ -14,7 +14,8 @@ import {
   LogIn,
   UserPlus,
   Clock,
-  MoreVertical
+  MoreVertical,
+  Smartphone
 } from 'lucide-react';
 import { 
   Appointment, 
@@ -36,15 +37,21 @@ import LandingPage from './components/LandingPage';
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentView, setCurrentView] = useState<View>('dashboard');
-  const [isSidebarOpen, setSidebarOpen] = useState(false); // Mobile default closed
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [traces, setTraces] = useState<AgreementTrace[]>([]);
   const [surveys, setSurveys] = useState<SurveyResponse[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showPWAHint, setShowPWAHint] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    // Check if running as standalone app
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+    if (!isStandalone) {
+      const hintShown = localStorage.getItem('delta33_pwa_hint');
+      if (!hintShown) setShowPWAHint(true);
+    }
     return () => clearInterval(timer);
   }, []);
 
@@ -86,6 +93,11 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem('delta33_session');
+  };
+
+  const dismissHint = () => {
+    setShowPWAHint(false);
+    localStorage.setItem('delta33_pwa_hint', 'true');
   };
 
   const exportData = () => {
@@ -132,7 +144,17 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50 overflow-hidden">
-      {/* Header Fijo */}
+      {/* Hint for PWA installation on mobile */}
+      {showPWAHint && (
+        <div className="bg-fen-blue text-white p-3 text-xs flex items-center justify-between animate-bounce z-50">
+          <div className="flex items-center gap-2">
+            <Smartphone size={16} />
+            <span>¡Instala Delta33! Pulsa "Añadir a pantalla de inicio"</span>
+          </div>
+          <button onClick={dismissHint}><X size={16} /></button>
+        </div>
+      )}
+
       <header className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-30 shrink-0">
         <div className="flex items-center gap-2">
           <MasonicIcons.Owl className="text-fen-navy" size={24} />
@@ -144,9 +166,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Desktop Sidebar (Only visible on MD+) */}
         <aside className="hidden md:flex flex-col w-64 bg-fen-navy text-white p-4 space-y-2 border-r border-white/10 shrink-0">
           {navItems.map((item) => (
             <button
@@ -160,14 +180,12 @@ const App: React.FC = () => {
           ))}
         </aside>
 
-        {/* Dynamic View Container */}
         <main className="flex-1 overflow-y-auto pb-20 md:pb-0 px-4 pt-6 no-scrollbar">
           {renderView()}
         </main>
       </div>
 
-      {/* Bottom Nav (Mobile Only) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex items-center justify-around z-40 pb-safe">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex items-center justify-around z-40 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
         {navItems.slice(0, 5).map((item) => (
           <button
             key={item.id}
